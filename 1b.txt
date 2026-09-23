@@ -1,0 +1,39 @@
+DB=student.csv
+touch $DB
+
+create(){
+    read -p "RollNo.: " r
+    read -p "Name: " n
+    read -p "marks: " m
+    echo "$r,$n,$m" >> $DB
+}
+
+show(){
+    awk -F, '{print $1,$2,$3}' $DB
+}
+
+update(){
+    read -p "RollNo.: " r
+    grep -q "^$r" $DB || { echo "Not found" ; return;}
+    read -p "Name: " n
+    read -p "marks: " m
+    sed -i "s/^$r,.*/$r,$n,$m/" $DB
+}
+
+delete(){
+    read -p "RollNo.: " r
+    grep -q "^$r" $DB || { echo "Not found" ; return;}
+    sed -i "/^$r,/d" $DB
+}
+
+while true; do
+echo "ENTER 1:CREATE, 2:READ ,3:UPDATE ,4:DELETE" 
+read -p "CHOICE: " ch 
+case $ch in
+1) create ;;
+2) show ;;
+3) update ;;
+4) delete ;;
+5) exit ;;
+esac
+done
